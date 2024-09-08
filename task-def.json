@@ -1,0 +1,70 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "nginx",
+      "image": "public.ecr.aws/nginx/nginx:stable-alpine3.19-slim",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/stag-yamada-nginx",
+          "awslogs-create-group": "true",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "systemControls": []
+    },
+    {
+      "name": "log_router",
+      "image": "public.ecr.aws/aws-observability/aws-for-fluent-bit:latest",
+      "cpu": 0,
+      "portMappings": [],
+      "essential": false,
+      "restartPolicy": {
+        "enabled": true,
+        "ignoredExitCodes": [
+          0
+        ],
+        "restartAttemptPeriod": 60
+      },
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/stag-yamada-fluentlog",
+          "awslogs-create-group": "true",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "systemControls": []
+    }
+  ],
+  "family": "stag-yamada-nginx-def",
+  "taskRoleArn": "arn:aws:iam::449671225256:role/ecsTaskRole-stag-yamada",
+  "executionRoleArn": "arn:aws:iam::449671225256:role/ecsTasExecRole",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "registeredAt": "2024-09-08T20:27:53.714000+09:00",
+  "registeredBy": "arn:aws:iam::449671225256:user/yamada"
+}
